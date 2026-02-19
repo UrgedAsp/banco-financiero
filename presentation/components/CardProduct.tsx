@@ -4,12 +4,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface CardProductProps {
     product: Product;
+    isLast?: boolean;
     onPress: () => void;
 }
 
-export default function CardProduct({ product, onPress }: CardProductProps) {
+export default function CardProduct({ product, onPress, isLast }: CardProductProps) {
     return (
-        <Pressable style={styles.container} onPress={() => onPress()}>
+        <Pressable style={[styles.container, isLast && { borderBottomWidth: 1 }]} onPress={() => onPress()}>
             <View>
                 <Text style={styles.title} adjustsFontSizeToFit numberOfLines={1}>{product.name}</Text>
                 <Text style={styles.description} adjustsFontSizeToFit numberOfLines={1}>ID: {product.id}</Text>
@@ -27,8 +28,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 20,
         backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderColor: '#e0e0e0',
     },
     title: {
         fontSize: 16,

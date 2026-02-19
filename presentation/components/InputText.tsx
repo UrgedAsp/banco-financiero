@@ -33,7 +33,7 @@ const InputText = ({
     }
     return (
         <View>
-            {label && <Text style={{ color: labelColor }}>{label}</Text>}
+            {label && <Text style={[styles.inputLabel, { color: labelColor }]}>{label}</Text>}
             <TextInput
                 placeholder={placeholder}
                 value={value}
@@ -56,6 +56,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 16,
     },
+    inputLabel: {
+        marginBottom: 8,
+        marginLeft: 4,
+    },
     inputError: {
         borderColor: Colors.error,
     },
@@ -64,6 +68,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
     inputRead: {
-        backgroundColor: "#d7d4d4ff",
+        backgroundColor: Colors.secondaryButton,
+        color: Colors.secondaryText,
     }
 })

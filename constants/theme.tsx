@@ -2,7 +2,7 @@ export const Colors = {
     primaryText: '#000',
     secondaryText: '#6c757d',
     primaryButton: "#ffdd00",
-    secondaryButton: "#6c757d",
+    secondaryButton: "#e9ecf3",
     tertiaryButton: "#dc3545",
     inputBorder: '#ccc',
     background: '#fff',
