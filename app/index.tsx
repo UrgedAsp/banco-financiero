@@ -35,8 +35,8 @@ export default function Home() {
             ) : (
               <FlatList
                 data={filteredProducts}
-                renderItem={({ item }) => (
-                  <CardProduct product={item} onPress={() => { setSelectedProduct(item); router.push(`/product/${item.id}`) }} />
+                renderItem={({ item, index }) => (
+                  <CardProduct product={item} onPress={() => { setSelectedProduct(item); router.push(`/product/${item.id}`) }} isLast={index === (filteredProducts && filteredProducts.length - 1)} />
                 )}
                 keyExtractor={(item) => item.id}
               />
@@ -47,7 +47,7 @@ export default function Home() {
         )
       }
       <View style={styles.buttonContainer}>
-        <CustomButton type="primary" title="Agregar" onPress={() => { }} />
+        <CustomButton type="primary" title="Agregar" onPress={() => { router.push('/add-product') }} />
       </View>
     </View >
   );

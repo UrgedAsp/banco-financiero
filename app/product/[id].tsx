@@ -1,12 +1,19 @@
 import { Colors } from "@/constants/theme";
+import { deleteProduct } from "@/core/products/actions/delete-product.action";
 import CustomButton from "@/presentation/components/CustomButton";
+import ModalConfirmation from "@/presentation/components/ModalConfirmation";
 import { SafeImage } from "@/presentation/components/SafeImage";
 import useProductStore from "@/store/useProductStore";
-import { StyleSheet, Text, View } from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 
 export default function ProductDetail() {
 
     const product = useProductStore((state) => state.selectedProduct);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const queryClient = useQueryClient();
 
     if (!product) {
         return (
@@ -14,6 +21,26 @@ export default function ProductDetail() {
                 <Text>Producto no encontrado</Text>
             </View>
         );
+    }
+
+    const handleDeleteProduct = async () => {
+        try {
+            await deleteProduct(product.id);
+            setIsModalVisible(false);
+            Alert.alert("Éxito", "Producto eliminado correctamente", [
+                {
+                    text: "OK",
+                    onPress: () => {
+                        queryClient.invalidateQueries({ queryKey: ["products"] });
+                        router.back();
+                    },
+                },
+            ]);
+        } catch (error) {
+            console.log(error);
+            setIsModalVisible(false);
+            Alert.alert("Error", "Ocurrió un error al eliminar el producto, inténtelo de nuevo más tarde");
+        }
     }
 
     return (
@@ -24,16 +51,23 @@ export default function ProductDetail() {
                 <Row label="Nombre" value={product.name} />
                 <Row label="Descripción" value={product.description} />
                 <View>
-                    <Text>Logo</Text>
+                    <Text style={styles.infoLabel}>Logo</Text>
                     <SafeImage uri={product.logo} style={styles.logo} />
                 </View>
                 <Row label="Fecha de lanzamiento" value={product?.date_release} />
                 <Row label="Fecha de revisión" value={product?.date_revision} />
             </View>
             <View style={styles.actions}>
-                <CustomButton title="Editar" type="primary" onPress={() => { }} />
-                <CustomButton title="Eliminar" type="tertiary" onPress={() => { }} />
+                <CustomButton title="Editar" type="primary" onPress={() => { router.push("/update-product") }} />
+                <CustomButton title="Eliminar" type="tertiary" onPress={() => setIsModalVisible(true)} />
             </View>
+
+            <ModalConfirmation
+                visible={isModalVisible}
+                message={`¿Estás seguro de eliminar el producto "${product.name}"?`}
+                onConfirm={handleDeleteProduct}
+                onCancel={() => setIsModalVisible(false)}
+            />
         </View>
     );
 }
